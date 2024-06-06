@@ -1,16 +1,22 @@
 import express, { NextFunction, Request, Response } from "express";
 
-import { config } from "./config/config";
-import createHttpError, { HttpError } from "http-errors";
 import globleErrorHandler from "./middleware/GlobleErrorHandler";
+import userRouter from "./user/router";
 
 const app = express();
+app.use(globleErrorHandler);
+app.use("/api/users", userRouter);
 
 app.get("/", (req, res) => {
-  const error = createHttpError(400, "Something went worng");
-  throw error;
+  res.json({
+    message: "something went worng",
+  });
 });
 
-app.use(globleErrorHandler);
+// app.post("/api/users/hellow", (req, res) => {
+//   res.json({
+//     message: "dfdskfjdskfjdkfj ",
+//   });
+// });
 
 export default app;
