@@ -7,7 +7,7 @@ import bookrouter from "./book/router";
 const app = express();
 app.use(json());
 app.use("/api/users", userRouter);
-app.use("/api/users", bookrouter);
+app.use("/api/books", bookrouter);
 app.use(globleErrorHandler);
 
 app.get("/", (req, res) => {
