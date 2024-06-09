@@ -10,3 +10,11 @@ export interface BOOKTYPE {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// import {v2 as cloudinary} from 'cloudinary';
+          
+// cloudinary.config({ 
+//   cloud_name: 'dxh8knqc5', 
+//   api_key: '659831499245129', 
+//   api_secret: 'QcvYujmgagCcJZ5GecSgBGADsl0' 
+// });
