@@ -35,8 +35,10 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       folder: "book-pdf",
       format: "pdf",
     });
-    console.log("upload resultbook=", bookuploadsResult);
-    console.log("upload result=", uploadsResult);
+    // console.log("upload resultbook=", bookuploadsResult);
+    // console.log("upload result=", uploadsResult);
+    // @ts-ignore
+    // console.log("RequesUser ID", req.useId);
 
     // Save book in mongodb database
 

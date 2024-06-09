@@ -50,6 +50,8 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+// ### User login part here
+
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
