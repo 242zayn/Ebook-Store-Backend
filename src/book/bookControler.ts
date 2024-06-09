@@ -4,9 +4,10 @@ import fs from "node:fs";
 import cloudinary from "../config/cloudinary";
 import bookModel from "./bookModel";
 import createHttpError from "http-errors";
+import { authRequest } from "../middleware/Authenticate";
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
   const { title, genre } = req.body;
-  console.log(req.files);
+  // console.log(req.files);
 
   try {
     const files = req.files as { [filename: string]: Express.Multer.File[] };
@@ -37,26 +38,29 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     });
     // console.log("upload resultbook=", bookuploadsResult);
     // console.log("upload result=", uploadsResult);
-    // @ts-ignore
-    // console.log("RequesUser ID", req.useId);
 
-    // Save book in mongodb database
+    // @ts-ignore
+    console.log("yoru req id is", req.userId);
+
+    const _req = req as authRequest;
+    
+    console.log(_req.userId);
 
     const newBook = await bookModel.create({
       title: title,
       genre: genre,
-      author: "666441c5b0b4d8e946298762",
+      author: _req.userId,
       coverImage: uploadsResult.secure_url,
       file: bookuploadsResult.secure_url,
     });
+    fs.promises.unlink(filePath);
+    fs.promises.unlink(bookFilepath);
 
-    try {
-      //   delete temp file
-      fs.promises.unlink(filePath);
-      fs.promises.unlink(bookFilepath);
-    } catch (error) {
-      createHttpError(401, "Error while deleting temp file ");
-    }
+    // try {
+    //   //   delete temp file
+    // } catch (error) {
+    //   createHttpError(401, "Error while deleting temp file ");
+    // }
 
     res.status(201).json({ id: newBook._id });
   } catch (error) {
