@@ -1,5 +1,10 @@
 import express, { Request, Response } from "express";
-import { allBookList, bookUpdate, createBook } from "./bookControler";
+import {
+  allBookList,
+  bookUpdate,
+  createBook,
+  oneBookFind,
+} from "./bookControler";
 import multer from "multer";
 import path from "node:path";
 import authenticate from "../middleware/Authenticate";
@@ -35,5 +40,9 @@ bookrouter.patch(
 
 // read book list of all book
 bookrouter.get("/", allBookList);
+
+// find spacial book get methed
+
+bookrouter.get("/:bookId", oneBookFind);
 
 export default bookrouter;
