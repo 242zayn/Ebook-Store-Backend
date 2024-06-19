@@ -5,8 +5,9 @@ import cloudinary from "../config/cloudinary";
 import bookModel from "./bookModel";
 import createHttpError from "http-errors";
 import { authRequest } from "../middleware/Authenticate";
+
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
-  const { title, genre } = req.body;
+  const { title, genre, description } = req.body;
   // console.log(req.files);
 
   try {
@@ -39,16 +40,18 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     // console.log("upload resultbook=", bookuploadsResult);
     // console.log("upload result=", uploadsResult);
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     console.log("yoru req id is", req.userId);
 
-    const _req = req as authRequest;
+    console.log("yoru req id is", req);
 
-    console.log(_req.userId);
+    const _req = req as authRequest;
 
     const newBook = await bookModel.create({
       title: title,
       genre: genre,
+      description: description,
       author: _req.userId,
       coverImage: uploadsResult.secure_url,
       file: bookuploadsResult.secure_url,
@@ -146,11 +149,11 @@ const bookUpdate = async (req: Request, res: Response, next: NextFunction) => {
 
 const allBookList = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const allbook = await bookModel.find();
-
-    res.json(allbook);
-  } catch (error) {
-    return next(createHttpError(401, "Error while find book list."));
+    // todo: add pagination.
+    const book = await bookModel.find().populate("author", "name");
+    res.json(book);
+  } catch (err) {
+    return next(createHttpError(500, "Error while getting a book"));
   }
 };
 
@@ -158,18 +161,31 @@ const oneBookFind = async (req: Request, res: Response, next: NextFunction) => {
   const bookId = req.params.bookId;
 
   try {
-    const book = await bookModel.findOne({
-      _id: bookId,
-    });
-
+    const book = await bookModel
+      .findOne({ _id: bookId })
+      // populate author field
+      .populate("author", "name");
     if (!book) {
-      return next(createHttpError(401, "Book not find"));
+      return next(createHttpError(404, "Book not found."));
     }
 
-    res.json(book);
-  } catch (error) {
-    return next(createHttpError(401, "Error while find book"));
+    return res.json(book);
+  } catch (err) {
+    return next(createHttpError(500, "Error while getting a book"));
   }
 };
 
-export { createBook, bookUpdate, allBookList, oneBookFind  };
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+  const bookId = req.params.bookId;
+
+  try {
+    const book = await bookModel.deleteOne({
+      _id: bookId,
+    });
+    res.json(book);
+  } catch (error) {
+    return next(createHttpError(401, "Error while deleteing book"));
+  }
+};
+
+export { createBook, bookUpdate, allBookList, oneBookFind, deleteBook };

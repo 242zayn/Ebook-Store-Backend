@@ -3,6 +3,7 @@ import {
   allBookList,
   bookUpdate,
   createBook,
+  deleteBook,
   oneBookFind,
 } from "./bookControler";
 import multer from "multer";
@@ -42,7 +43,9 @@ bookrouter.patch(
 bookrouter.get("/", allBookList);
 
 // find spacial book get methed
-
 bookrouter.get("/:bookId", oneBookFind);
+
+// delete book
+bookrouter.delete("/:bookId", deleteBook);
 
 export default bookrouter;

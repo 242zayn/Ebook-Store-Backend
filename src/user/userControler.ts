@@ -87,3 +87,11 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 export { createUser, loginUser };
+
+
+//  useEffect(() => {
+//       const timer = setTimeout(() => {
+//         router.push('/home');
+//       }, 3000);
+//       return () => clearTimeout(timer);
+//     }, );
